@@ -141,7 +141,7 @@
       border-radius: 50%;
       filter: blur(90px);
       opacity: 0.25;
-      animation: pulse-glow 6s ease-in-out infinite;
+      animation: none;
     }
     .g1 { width: 600px; height: 400px; background: #6040c0; top: -10%; left: 10%; animation-delay: 0s; }
     .g2 { width: 400px; height: 300px; background: #a060d0; bottom: 5%; right: 5%; animation-delay: 2s; }
@@ -154,11 +154,6 @@
     .hero-content {
       position: relative;
       z-index: 2;
-      animation: hero-entrance 1.2s ease 0.3s both;
-    }
-    @keyframes hero-entrance {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
     }
 
     .hero-eyebrow {
@@ -183,7 +178,7 @@
         0 0 40px rgba(160,100,255,0.4),
         0 0 80px rgba(140,80,240,0.2),
         inset 0 0 20px rgba(255,255,255,0.05);
-      animation: float-icon 4s ease-in-out infinite;
+      animation: none;
     }
     @keyframes float-icon {
       0%,100% { transform: translateY(0); }
@@ -194,7 +189,7 @@
       inset: -12px;
       border-radius: 50%;
       border: 1px solid rgba(220,180,255,0.3);
-      animation: ring-spin 12s linear infinite;
+      animation: none;
     }
     @keyframes ring-spin { to { transform: rotate(360deg); } }
 
@@ -202,7 +197,7 @@
       position: absolute;
       font-size: 14px;
       color: var(--gold-light);
-      animation: sparkle-anim 3s ease-in-out infinite;
+      animation: none;
     }
     .s1 { top: 5%;  left: -5%;  animation-delay: 0s; }
     .s2 { top: -5%; right: 10%; animation-delay: 0.75s; }
@@ -298,7 +293,7 @@
       width: 1px;
       height: 50px;
       background: linear-gradient(to bottom, transparent, rgba(220,180,255,0.6));
-      animation: scroll-line 2s ease-in-out infinite;
+      animation: none;
     }
     .scroll-indicator p {
       font-size: 0.65rem;
@@ -803,26 +798,7 @@
       letter-spacing: 0.05em;
     }
 
-    /* ---------- スクロールアニメーション ---------- */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    /* JS未対応・アプリ内ブラウザ用フォールバック（3秒後に強制表示） */
-    @keyframes fallback-show {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in {
-      animation: fallback-show 0s ease 3s forwards;
-    }
-    .fade-in.visible {
-      animation: none;
-    }
+    /* ---------- スクロールアニメーション（無効化） ---------- */
 
     /* ---------- レスポンシブ ---------- */
     @media (max-width: 768px) {
@@ -850,9 +826,6 @@
   </style>
 </head>
 <body>
-
-  <!-- 星のパーティクル背景 -->
-  <div class="stars-bg" id="stars-bg"></div>
 
   <!-- ヘッダー -->
   <header class="site-header">
@@ -1134,96 +1107,6 @@
   </footer>
 
   <script>
-    /* ===================================================
-       Fairy bookstore / メル LP — スクリプト
-       =================================================== */
-
-    /* ---------- 星のパーティクル生成 ---------- */
-    function createStars() {
-      var bg = document.getElementById('stars-bg');
-      if (!bg) return;
-      for (var i = 0; i < 120; i++) {
-        var star = document.createElement('div');
-        star.className = 'star-particle';
-        var size  = Math.random() * 2.5 + 0.5;
-        var dur   = (Math.random() * 4 + 2).toFixed(2);
-        var delay = (Math.random() * 6).toFixed(2);
-        var maxOp = (Math.random() * 0.6 + 0.2).toFixed(2);
-        star.style.cssText =
-          'width:' + size + 'px;' +
-          'height:' + size + 'px;' +
-          'left:' + (Math.random() * 100) + '%;' +
-          'top:' + (Math.random() * 100) + '%;' +
-          '--dur:' + dur + 's;' +
-          '--max-op:' + maxOp + ';' +
-          'animation-delay:' + delay + 's;';
-        bg.appendChild(star);
-      }
-    }
-
-    /* ---------- 浮遊する光の粒 ---------- */
-    function rnd(min, max) {
-      return Math.floor(Math.random() * (max - min) + min);
-    }
-    function createFloatingParticles() {
-      var hero = document.querySelector('.hero');
-      if (!hero) return;
-
-      /* keyframes を一度だけ注入 */
-      var style = document.createElement('style');
-      style.textContent =
-        '@keyframes float-particle {' +
-        '0%   { transform:translate(0,0) scale(0.8); opacity:0; }' +
-        '20%  { opacity:0.7; }' +
-        '50%  { transform:translate(' + rnd(-30,30) + 'px,' + rnd(-40,40) + 'px) scale(1.2); }' +
-        '80%  { opacity:0.5; }' +
-        '100% { transform:translate(' + rnd(-30,30) + 'px,' + rnd(-60,-20) + 'px) scale(0.6); opacity:0; }' +
-        '}';
-      document.head.appendChild(style);
-
-      for (var i = 0; i < 18; i++) {
-        var p = document.createElement('div');
-        var size  = Math.random() * 6 + 2;
-        var dur   = (Math.random() * 8 + 6).toFixed(2);
-        var delay = (Math.random() * 8).toFixed(2);
-        p.style.cssText =
-          'position:absolute;' +
-          'width:' + size + 'px;height:' + size + 'px;' +
-          'left:' + (Math.random() * 100) + '%;' +
-          'top:' + (Math.random() * 100) + '%;' +
-          'border-radius:50%;' +
-          'background:radial-gradient(circle,rgba(255,230,200,0.9),rgba(200,170,255,0.5));' +
-          'filter:blur(' + (size * 0.4) + 'px);' +
-          'pointer-events:none;z-index:1;' +
-          'animation:float-particle ' + dur + 's ease-in-out ' + delay + 's infinite;';
-        hero.appendChild(p);
-      }
-    }
-
-    /* ---------- スクロールアニメーション ---------- */
-    function initScrollAnimation() {
-      var targets = document.querySelectorAll(
-        '.about-card,.quote-card,.menu-card,.flow-step,.openchat-card,.cta-inner,.flow-note'
-      );
-      targets.forEach(function(el) { el.classList.add('fade-in'); });
-
-      if (!('IntersectionObserver' in window)) {
-        targets.forEach(function(el) { el.classList.add('visible'); });
-        return;
-      }
-      var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry, i) {
-          if (entry.isIntersecting) {
-            setTimeout(function() {
-              entry.target.classList.add('visible');
-            }, i * 80);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.12 });
-      targets.forEach(function(el) { observer.observe(el); });
-    }
-
     /* ---------- ヘッダー スクロール変化 ---------- */
     function initHeader() {
       var header = document.querySelector('.site-header');
@@ -1248,47 +1131,9 @@
       });
     }
 
-    /* ---------- グリッターエフェクト ---------- */
-    function initGlitter() {
-      var style = document.createElement('style');
-      style.textContent =
-        '@keyframes glitter-fade{' +
-        '0%{opacity:1;transform:translate(-50%,-50%) scale(0)}' +
-        '50%{opacity:.8;transform:translate(-50%,-50%) scale(2.5)}' +
-        '100%{opacity:0;transform:translate(-50%,-50%) scale(4)}}';
-      document.head.appendChild(style);
-
-      document.querySelectorAll('.btn-primary,.btn-menu,.btn-line').forEach(function(btn) {
-        btn.addEventListener('mousemove', function(e) {
-          var rect = btn.getBoundingClientRect();
-          var g = document.createElement('span');
-          g.style.cssText =
-            'position:absolute;width:6px;height:6px;border-radius:50%;' +
-            'background:rgba(255,255,255,0.8);' +
-            'left:' + (e.clientX - rect.left) + 'px;' +
-            'top:' + (e.clientY - rect.top) + 'px;' +
-            'transform:translate(-50%,-50%);pointer-events:none;' +
-            'animation:glitter-fade 0.6s ease forwards;';
-          btn.appendChild(g);
-          setTimeout(function() { g.remove(); }, 600);
-        });
-      });
-    }
-
-    /* ---------- ヒーローフェードイン ---------- */
-    function initHeroEntrance() {
-      /* CSSアニメーションに移行したため、JS側は何もしない */
-    }
-
-    /* ---------- 初期化 ---------- */
     document.addEventListener('DOMContentLoaded', function() {
-      createStars();
-      createFloatingParticles();
-      initScrollAnimation();
       initHeader();
       initSmoothScroll();
-      initGlitter();
-      initHeroEntrance();
     });
   </script>
 </body>
