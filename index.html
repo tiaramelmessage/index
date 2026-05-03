@@ -151,7 +151,15 @@
       50%      { transform: scale(1.15); opacity: 0.35; }
     }
 
-    .hero-content { position: relative; z-index: 2; }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      animation: hero-entrance 1.2s ease 0.3s both;
+    }
+    @keyframes hero-entrance {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     .hero-eyebrow {
       font-size: 0.85rem;
@@ -805,6 +813,16 @@
       opacity: 1;
       transform: translateY(0);
     }
+    /* JS未対応・アプリ内ブラウザ用フォールバック（3秒後に強制表示） */
+    @keyframes fallback-show {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+      animation: fallback-show 0s ease 3s forwards;
+    }
+    .fade-in.visible {
+      animation: none;
+    }
 
     /* ---------- レスポンシブ ---------- */
     @media (max-width: 768px) {
@@ -1259,13 +1277,7 @@
 
     /* ---------- ヒーローフェードイン ---------- */
     function initHeroEntrance() {
-      var heroContent = document.querySelector('.hero-content');
-      if (!heroContent) return;
-      heroContent.style.cssText += 'opacity:0;transform:translateY(20px);transition:opacity 1.2s ease,transform 1.2s ease;';
-      setTimeout(function() {
-        heroContent.style.opacity = '1';
-        heroContent.style.transform = 'translateY(0)';
-      }, 300);
+      /* CSSアニメーションに移行したため、JS側は何もしない */
     }
 
     /* ---------- 初期化 ---------- */
